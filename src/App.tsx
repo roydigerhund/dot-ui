@@ -78,7 +78,7 @@ function App() {
         const state = states[stateKey as keyof typeof states];
         return (
           <div key={stateKey} className="w-16 h-16 relative">
-            {state[0].map((pos, i) => (
+            {state[0].map((_, i) => (
               <motion.div
                 key={i}
                 className="w-4 h-4 bg-white rounded-full absolute"
