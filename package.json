@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "dev:css": "yarn tailwindcss -i ./src/index.css -o ./src/index.build.css --watch",
-    "build": "tsc && vite build",
+    "build": "yarn build:css && tsc && vite build",
+    "build:css": "yarn tailwindcss -i ./src/index.css -o ./src/index.build.css",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
