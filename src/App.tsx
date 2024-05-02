@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import Composer from './components/Composer';
-import { findNearestDot, hasDot } from './utils/grid-math';
+import { findNearestDot, hasDot, hasVectorDot } from './utils/grid-math';
 
 const moveStates = {
   cross: [
@@ -164,6 +164,13 @@ const arrowStates = [
     [0, 0, 1, 0, 1, 0, 0, 0],
   ],
 ];
+const vectorStates = [
+  [
+    [[1, 1], [], [-1, 1]],
+    [[], [0, 0], []],
+    [[1, -1], [], [-1, -1]],
+  ],
+];
 
 function App() {
   const [showComposer, setShowComposer] = useState(false);
@@ -182,6 +189,40 @@ function App() {
         <Composer />
       ) : (
         <>
+          <div className="relative grid grid-cols-3 gap-2">
+            {vectorStates[0].map((row, rowIndex) =>
+              row.map((_, columnIndex) => {
+                if (!hasVectorDot(vectorStates, [rowIndex, columnIndex]))
+                  return <div key={columnIndex} className="h-4 w-4 bg-white/20 rounded-full" />;
+                return (
+                  <motion.div
+                    key={columnIndex}
+                    className="h-4 w-4 rounded-full bg-white"
+                    animate={{
+                      translateX: vectorStates
+                        .map((state) => {
+                          const vectorX = state[rowIndex][columnIndex][0];
+                          return [0, vectorX * 24];
+                        })
+                        .flat(),
+                      translateY: vectorStates
+                        .map((state) => {
+                          const vectorY = state[rowIndex][columnIndex][1];
+                          return [0, vectorY * 24];
+                        })
+                        .flat(),
+                    }}
+                    transition={{
+                      duration: vectorStates.length,
+                      ease: 'backInOut',
+                      repeat: Infinity,
+                      repeatType: 'mirror',
+                    }}
+                  />
+                );
+              }),
+            )}
+          </div>
           <div className="relative grid grid-cols-8 gap-2">
             {arrowStates[0].map((row, rowIndex) =>
               row.map((_, columnIndex) => {

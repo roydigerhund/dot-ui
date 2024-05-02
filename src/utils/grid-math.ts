@@ -1,5 +1,6 @@
-type State = number[][];
-type States = State[];
+export type State = number[][];
+export type States = State[];
+export type VectorState = number[][][];
 
 // find first dot in an array of arrays of number like this [[0,1,0],[0,0,0],[1,0,0]]
 export const findFirstDot = (state: State) => {
@@ -47,11 +48,15 @@ export const findFarthestDot = (state: State, currentPos: [number, number]) => {
     }
   }
   return farthestPos;
-}
+};
 
 // check if dot position has exists (has 1 as value) in any states
 export const hasDot = (states: States, pos: [number, number]) => {
   return states.some((state) => state[pos[0]][pos[1]] === 1);
+};
+// check if dot position has exists (has 1 as value) in any states
+export const hasVectorDot = (states: VectorState[], pos: [number, number]) => {
+  return states.some((state) => state[pos[0]][pos[1]].length);
 };
 
 // get maximum number of dots in any states
