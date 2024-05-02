@@ -1,8 +1,11 @@
+type State = number[][];
+type States = State[];
+
 // find first dot in an array of arrays of number like this [[0,1,0],[0,0,0],[1,0,0]]
-export const findFirstDot = (arr: number[][]) => {
-  for (let i = 0; i < arr.length; i++) {
-    for (let j = 0; j < arr[i].length; j++) {
-      if (arr[i][j] === 1) {
+export const findFirstDot = (state: State) => {
+  for (let i = 0; i < state.length; i++) {
+    for (let j = 0; j < state[i].length; j++) {
+      if (state[i][j] === 1) {
         return [i, j];
       }
     }
@@ -12,12 +15,12 @@ export const findFirstDot = (arr: number[][]) => {
 
 // find nearest dot in an array of arrays of number like this [[0,1,0],[0,0,0],[1,0,0]]
 // input is the array and the current position of the dot
-export const findNearestDot = (arr: number[][], currentPos: [number, number]) => {
+export const findNearestDot = (state: State, currentPos: [number, number]) => {
   let nearestPos = [0, 0];
   let minDistance = Infinity;
-  for (let i = 0; i < arr.length; i++) {
-    for (let j = 0; j < arr[i].length; j++) {
-      if (arr[i][j] === 1) {
+  for (let i = 0; i < state.length; i++) {
+    for (let j = 0; j < state[i].length; j++) {
+      if (state[i][j] === 1) {
         const distance = Math.sqrt((i - currentPos[0]) ** 2 + (j - currentPos[1]) ** 2);
         if (distance < minDistance) {
           minDistance = distance;
@@ -27,4 +30,31 @@ export const findNearestDot = (arr: number[][], currentPos: [number, number]) =>
     }
   }
   return nearestPos;
+};
+
+export const findFarthestDot = (state: State, currentPos: [number, number]) => {
+  let farthestPos = [0, 0];
+  let maxDistance = 0;
+  for (let i = 0; i < state.length; i++) {
+    for (let j = 0; j < state[i].length; j++) {
+      if (state[i][j] === 1) {
+        const distance = Math.sqrt((i - currentPos[0]) ** 2 + (j - currentPos[1]) ** 2);
+        if (distance > maxDistance) {
+          maxDistance = distance;
+          farthestPos = [i, j];
+        }
+      }
+    }
+  }
+  return farthestPos;
+}
+
+// check if dot position has exists (has 1 as value) in any states
+export const hasDot = (states: States, pos: [number, number]) => {
+  return states.some((state) => state[pos[0]][pos[1]] === 1);
+};
+
+// get maximum number of dots in any states
+export const maxDots = (states: States) => {
+  return Math.max(...states.map((state) => state.flat().filter((dot) => dot === 1).length));
 };

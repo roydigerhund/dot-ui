@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import Composer from './components/Composer';
-import { findNearestDot } from './utils/grid-math';
+import { findNearestDot, hasDot } from './utils/grid-math';
 
 const moveStates = {
   cross: [
@@ -144,6 +144,26 @@ const numberStates = [
     [1, 1, 1],
   ],
 ];
+const arrowStates = [
+  [
+    [1, 0, 1, 0, 1, 0, 0, 0],
+    [0, 1, 0, 1, 0, 1, 0, 0],
+    [0, 0, 1, 0, 1, 0, 1, 0],
+    [0, 0, 0, 1, 0, 1, 0, 1],
+    [0, 0, 1, 0, 1, 0, 1, 0],
+    [0, 1, 0, 1, 0, 1, 0, 0],
+    [1, 0, 1, 0, 1, 0, 0, 0],
+  ],
+  [
+    [0, 0, 1, 0, 1, 0, 0, 0],
+    [0, 0, 0, 1, 0, 1, 0, 0],
+    [0, 0, 0, 0, 1, 0, 1, 0],
+    [0, 0, 0, 0, 0, 1, 0, 1],
+    [0, 0, 0, 0, 1, 0, 1, 0],
+    [0, 0, 0, 1, 0, 1, 0, 0],
+    [0, 0, 1, 0, 1, 0, 0, 0],
+  ],
+];
 
 function App() {
   const [showComposer, setShowComposer] = useState(false);
@@ -162,6 +182,37 @@ function App() {
         <Composer />
       ) : (
         <>
+          <div className="relative grid grid-cols-8 gap-2">
+            {arrowStates[0].map((row, rowIndex) =>
+              row.map((_, columnIndex) => {
+                if (!hasDot(arrowStates, [rowIndex, columnIndex])) return <div key={columnIndex} />;
+                return (
+                  <motion.div
+                    key={columnIndex}
+                    className="h-4 w-4 rounded-full bg-white"
+                    animate={{
+                      translateX: arrowStates.map((state) => {
+                        const restingDot = findNearestDot(state, [rowIndex, columnIndex]);
+                        const restingCenterXOffset = columnIndex - restingDot[1];
+                        return state[rowIndex][columnIndex] ? 0 : restingCenterXOffset * -24;
+                      }),
+                      translateY: arrowStates.map((state) => {
+                        const restingDot = findNearestDot(state, [rowIndex, columnIndex]);
+                        const restingCenterYOffset = rowIndex - restingDot[0];
+                        return state[rowIndex][columnIndex] ? 0 : restingCenterYOffset * -24;
+                      }),
+                    }}
+                    transition={{
+                      duration: arrowStates.length,
+                      ease: 'backInOut',
+                      repeat: Infinity,
+                      repeatType: 'mirror',
+                    }}
+                  />
+                );
+              }),
+            )}
+          </div>
           <div className="grid grid-cols-3 gap-32">
             {Object.keys(moveStates).map((stateKey) => {
               const state = moveStates[stateKey as keyof typeof moveStates];
