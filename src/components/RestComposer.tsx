@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { clone } from 'remeda';
 import { classNames } from '../utils/classNames';
-import { VectorState } from '../utils/grid-math';
+import { RestState } from '../utils/types';
 
-const getCleanState = (rows: number, columns: number): VectorState => {
-  return Array.from({ length: rows }).map(() => new Array(columns).fill([]));
+const getCleanState = (rows: number, columns: number): RestState => {
+  return new Array(rows).fill([]).map(() => new Array(columns).fill(0));
 };
 
-export default function Composer() {
+export default function RestComposer() {
   const [playground, setPlayground] = useState({ columns: 3, rows: 3, state: getCleanState(3, 3) });
 
   const changeRows = (change: number) => {
@@ -29,13 +29,13 @@ export default function Composer() {
   };
 
   const isCellActive = (row: number, column: number) => {
-    return !!playground.state[row]?.[column].length;
+    return playground.state[row]?.[column] === 1;
   };
 
   const toggleCell = (row: number, column: number) => {
     setPlayground((prev) => {
       const newState = clone(prev.state);
-      newState[row][column] = newState[row][column].length ? [] : [1, 1];
+      newState[row][column] = newState[row][column] ? 0 : 1;
       return {
         ...prev,
         state: newState,
@@ -66,17 +66,6 @@ export default function Composer() {
               onClick={() => toggleCell(row, column)}
             >
               {isCellActive(row, column) && <div className="absolute inset-0 z-10 rounded-full bg-white" />}
-              {isCellActive(row, column) && (
-                <div
-                  draggable
-                  className="absolute inset-0 z-10 rounded-full bg-white/50"
-                  style={{
-                    transform: `translate(${playground.state[row][column][0] * 150}%, ${
-                      playground.state[row][column][1] * 150
-                    }%)`,
-                  }}
-                />
-              )}
               <div className="absolute inset-y-0 left-1/2 w-0.5 bg-zinc-900" />
               <div className="absolute inset-x-0 top-1/2 h-0.5 bg-zinc-900" />
             </div>

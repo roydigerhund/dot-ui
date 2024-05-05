@@ -1,9 +1,7 @@
-export type State = number[][];
-export type States = State[];
-export type VectorState = number[][][];
+import { RestState, RestStates, VectorState } from './types';
 
 // find first dot in an array of arrays of number like this [[0,1,0],[0,0,0],[1,0,0]]
-export const findFirstDot = (state: State) => {
+export const findFirstDot = (state: RestState) => {
   for (let i = 0; i < state.length; i++) {
     for (let j = 0; j < state[i].length; j++) {
       if (state[i][j] === 1) {
@@ -16,7 +14,7 @@ export const findFirstDot = (state: State) => {
 
 // find nearest dot in an array of arrays of number like this [[0,1,0],[0,0,0],[1,0,0]]
 // input is the array and the current position of the dot
-export const findNearestDot = (state: State, currentPos: [number, number]) => {
+export const findNearestDot = (state: RestState, currentPos: [number, number]) => {
   let nearestPos = [0, 0];
   let minDistance = Infinity;
   for (let i = 0; i < state.length; i++) {
@@ -33,7 +31,7 @@ export const findNearestDot = (state: State, currentPos: [number, number]) => {
   return nearestPos;
 };
 
-export const findFarthestDot = (state: State, currentPos: [number, number]) => {
+export const findFarthestDot = (state: RestState, currentPos: [number, number]) => {
   let farthestPos = [0, 0];
   let maxDistance = 0;
   for (let i = 0; i < state.length; i++) {
@@ -51,15 +49,15 @@ export const findFarthestDot = (state: State, currentPos: [number, number]) => {
 };
 
 // check if dot position has exists (has 1 as value) in any states
-export const hasDot = (states: States, pos: [number, number]) => {
+export const hasDot = (states: RestStates, pos: [number, number]) => {
   return states.some((state) => state[pos[0]][pos[1]] === 1);
 };
 // check if dot position has exists (has 1 as value) in any states
-export const hasVectorDot = (states: VectorState[], pos: [number, number]) => {
-  return states.some((state) => state[pos[0]][pos[1]].length);
+export const hasVectorDot = (state: VectorState, pos: [number, number]) => {
+  return state[pos[0]][pos[1]].length;
 };
 
 // get maximum number of dots in any states
-export const maxDots = (states: States) => {
+export const maxDots = (states: RestStates) => {
   return Math.max(...states.map((state) => state.flat().filter((dot) => dot === 1).length));
 };

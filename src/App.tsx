@@ -1,7 +1,10 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import Composer from './components/Composer';
+
+import RestComposer from './components/RestComposer';
+import VectorComposer from './components/VectorComposer';
 import { findNearestDot, hasDot, hasVectorDot } from './utils/grid-math';
+import { VectorStates } from './utils/types';
 
 const moveStates = {
   cross: [
@@ -164,11 +167,18 @@ const arrowStates = [
     [0, 0, 1, 0, 1, 0, 0, 0],
   ],
 ];
-const vectorStates = [
+const vectorStates: VectorStates = [
   [
     [[1, 1], [], [-1, 1]],
     [[], [0, 0], []],
     [[1, -1], [], [-1, -1]],
+  ],
+  [
+    [[1, 0], [], [], []],
+    [[], [2, 0], [], []],
+    [[], [], [3, 0], []],
+    [[], [2, 0], [], []],
+    [[1, 0], [], [], []],
   ],
 ];
 
@@ -186,26 +196,29 @@ function App() {
         <span className="block bg-gradient-to-l from-blue-500 to-purple-500 bg-clip-text text-transparent">UI</span>
       </h1>
       {showComposer ? (
-        <Composer />
+        <>
+          <RestComposer />
+          <VectorComposer />
+        </>
       ) : (
         <>
           <div className="relative grid grid-cols-3 gap-2">
             {vectorStates[0].map((row, rowIndex) =>
               row.map((_, columnIndex) => {
-                if (!hasVectorDot(vectorStates, [rowIndex, columnIndex]))
-                  return <div key={columnIndex} className="h-4 w-4 bg-white/20 rounded-full" />;
+                if (!hasVectorDot(vectorStates[0], [rowIndex, columnIndex]))
+                  return <div key={columnIndex} className="h-4 w-4 rounded-full bg-white/20" />;
                 return (
                   <motion.div
                     key={columnIndex}
                     className="h-4 w-4 rounded-full bg-white"
                     animate={{
-                      translateX: vectorStates
+                      translateX: [vectorStates[0]]
                         .map((state) => {
                           const vectorX = state[rowIndex][columnIndex][0];
                           return [0, vectorX * 24];
                         })
                         .flat(),
-                      translateY: vectorStates
+                      translateY: [vectorStates[0]]
                         .map((state) => {
                           const vectorY = state[rowIndex][columnIndex][1];
                           return [0, vectorY * 24];
@@ -213,8 +226,42 @@ function App() {
                         .flat(),
                     }}
                     transition={{
-                      duration: vectorStates.length,
+                      duration: 2,
                       ease: 'backInOut',
+                      repeat: Infinity,
+                      repeatType: 'mirror',
+                    }}
+                  />
+                );
+              }),
+            )}
+          </div>
+          <div className="relative grid grid-cols-4 gap-2">
+            {vectorStates[1].map((row, rowIndex) =>
+              row.map((_, columnIndex) => {
+                if (!hasVectorDot(vectorStates[1], [rowIndex, columnIndex]))
+                  return <div key={columnIndex} className="h-4 w-4" />;
+                return (
+                  <motion.div
+                    key={columnIndex}
+                    className="h-4 w-4 rounded-full bg-white"
+                    animate={{
+                      translateX: [vectorStates[1]]
+                        .map((state) => {
+                          const vectorX = state[rowIndex][columnIndex][0];
+                          return [0, vectorX * 24];
+                        })
+                        .flat(),
+                      translateY: [vectorStates[1]]
+                        .map((state) => {
+                          const vectorY = state[rowIndex][columnIndex][1];
+                          return [0, vectorY * 24];
+                        })
+                        .flat(),
+                    }}
+                    transition={{
+                      duration: 1,
+                      ease: 'anticipate',
                       repeat: Infinity,
                       repeatType: 'mirror',
                     }}
