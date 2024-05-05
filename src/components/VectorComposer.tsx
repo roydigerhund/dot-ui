@@ -1,14 +1,16 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { clone } from 'remeda';
 import { classNames } from '../utils/classNames';
 import { VectorState } from '../utils/types';
+import VectorPlayer from './VectorPlayer';
 
 const getCleanState = (rows: number, columns: number): VectorState => {
   return new Array(rows).fill([]).map(() => new Array(columns).fill([]));
 };
 
 export default function VectorComposer() {
-  const dragItem = useRef<HTMLDivElement | null>(null);
+  const [draggingPoint, setDraggingPoint] = useState<null | { x: number; y: number }>(null);
+  // const [activePoint, setActivePoint] = useState<null | { x: number; y: number }>(null);
   const [playground, setPlayground] = useState({ columns: 3, rows: 3, state: getCleanState(3, 3) });
 
   const changeRows = (change: number) => {
@@ -44,28 +46,25 @@ export default function VectorComposer() {
     });
   };
 
-  const dragStart = (e: React.DragEvent<HTMLDivElement>) => {
-    dragItem.current = e.currentTarget;
+  const dragStart = (position: { x: number; y: number }) => {
+    setDraggingPoint(position);
   };
 
   const dragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
   };
 
-  const drop = (e: React.DragEvent<HTMLDivElement>) => {
-    if (!dragItem.current) {
-      return;
-    }
-    if (dragItem.current === e.currentTarget) {
-      return;
-    }
-    const dragRow = parseInt(dragItem.current.getAttribute('data-row')!);
-    const dragColumn = parseInt(dragItem.current.getAttribute('data-column')!);
-    const dropRow = parseInt(e.currentTarget.getAttribute('data-row')!);
-    const dropColumn = parseInt(e.currentTarget.getAttribute('data-column')!);
+  const dragEnd = () => {
+    setDraggingPoint(null);
+  };
+
+  const drop = ({ position }: { position: { x: number; y: number } }) => {
+    if (!draggingPoint) return;
+    const dragColumn = draggingPoint.x ?? 0;
+    const dragRow = draggingPoint.y ?? 0;
     setPlayground((prev) => {
       const newState = clone(prev.state);
-      newState[dragRow][dragColumn] = [dropColumn - dragColumn, dropRow - dragRow];
+      newState[dragRow][dragColumn] = [position.x - dragColumn, position.y - dragRow];
       return {
         ...prev,
         state: newState,
@@ -89,17 +88,21 @@ export default function VectorComposer() {
         {Array.from({ length: playground.columns * playground.rows }).map((_, i) => {
           const row = Math.floor(i / playground.columns);
           const column = i % playground.columns;
-          const vector = playground.state[row][column];
+          const [vectorX, vectorY] = playground.state[row][column];
           return (
             <div
               key={i}
               className={classNames('dropzone relative h-8 w-8 cursor-cell rounded-full')}
-              data-row={row}
-              data-column={column}
               onClick={() => !isCellActive(row, column) && toggleCell(row, column)}
               onDragOver={dragOver}
-              onDrop={drop}
+              onDrop={() => drop({ position: { x: column, y: row } })}
             >
+              <div
+                className={classNames(
+                  'pointer-events-none absolute inset-0 z-0 rounded-full border border-dashed border-white/50 hover:border-white',
+                  draggingPoint ? 'opacity-100 transition-opacity' : 'opacity-0',
+                )}
+              />
               {isCellActive(row, column) && (
                 <div className="absolute inset-0 z-10 rounded-full bg-white" onClick={() => toggleCell(row, column)} />
               )}
@@ -107,21 +110,23 @@ export default function VectorComposer() {
                 <div
                   draggable
                   className="absolute z-20 h-full w-full rounded-full bg-white/50"
-                  onClick={() => vector[0] === 0 && vector[1] === 0 && toggleCell(row, column)}
-                  onDragStart={dragStart}
-                  data-row={row}
-                  data-column={column}
+                  onClick={() => vectorX === 0 && vectorY === 0 && toggleCell(row, column)}
+                  onDragStart={() => dragStart({ x: column, y: row })}
+                  onDragEnd={dragEnd}
                   style={{
-                    left: `${vector[0] * 150}%`,
-                    top: `${vector[1] * 150}%`,
+                    left: `${vectorX * 150}%`,
+                    top: `${vectorY * 150}%`,
                   }}
                 />
               )}
-              <div className="absolute inset-y-0 left-1/2 w-0.5 bg-zinc-900" />
-              <div className="absolute inset-x-0 top-1/2 h-0.5 bg-zinc-900" />
+              <div className="absolute inset-y-0 left-1/2 w-0.5 -translate-x-1/2 bg-zinc-900" />
+              <div className="absolute inset-x-0 top-1/2 h-0.5 -translate-y-1/2 bg-zinc-900" />
             </div>
           );
         })}
+      </div>
+      <div className="mt-16">
+        <VectorPlayer key={JSON.stringify(playground.state)} state={playground.state} />
       </div>
       <div className="mt-16 select-all">
         <pre>{JSON.stringify(playground.state)}</pre>
