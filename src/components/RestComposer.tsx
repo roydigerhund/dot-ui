@@ -9,6 +9,7 @@ const getCleanState = (rows: number, columns: number): RestState => {
 
 export default function RestComposer() {
   const [playground, setPlayground] = useState({ columns: 3, rows: 3, state: getCleanState(3, 3) });
+  const [inputState, setInputState] = useState<RestState>();
 
   const changeRows = (change: number) => {
     setPlayground((prev) => ({
@@ -43,17 +44,42 @@ export default function RestComposer() {
     });
   };
 
+  const importState = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (inputState) {
+      setPlayground((prev) => ({
+        ...prev,
+        rows: inputState.length,
+        columns: inputState[0].length,
+        state: inputState,
+      }));
+    }
+  };
+
   return (
     <div className="flex flex-col items-center">
-      <div className="space-x-4 text-center">
-        <button onClick={() => changeColumns(-1)}>-</button>
-        <span>Columns</span>
-        <button onClick={() => changeColumns(1)}>+</button>
-      </div>
-      <div className="space-x-4 text-center">
-        <button onClick={() => changeRows(-1)}>-</button>
-        <span>Rows</span>
-        <button onClick={() => changeRows(1)}>+</button>
+      <form onSubmit={importState}>
+        <input
+          type="text"
+          className="w-24 text-black"
+          value={JSON.stringify(inputState) || ''}
+          onChange={(e) => setInputState(e.target.value ? JSON.parse(e.target.value) : undefined)}
+        />
+        <button type="submit" className="ml-4">
+          Import
+        </button>
+      </form>
+      <div className="mt-4">
+        <div className="space-x-4 text-center">
+          <button onClick={() => changeColumns(-1)}>-</button>
+          <span>Columns</span>
+          <button onClick={() => changeColumns(1)}>+</button>
+        </div>
+        <div className="space-x-4 text-center">
+          <button onClick={() => changeRows(-1)}>-</button>
+          <span>Rows</span>
+          <button onClick={() => changeRows(1)}>+</button>
+        </div>
       </div>
       <div className="mt-16 grid gap-4" style={{ gridTemplateColumns: `repeat(${playground.columns}, 1fr)` }}>
         {Array.from({ length: playground.columns * playground.rows }).map((_, i) => {

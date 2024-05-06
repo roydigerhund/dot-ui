@@ -10,7 +10,7 @@ function App() {
   return (
     <div className="flex flex-col items-center justify-center gap-24 p-16">
       <h1
-        className="flex items-center justify-center gap-1 text-6xl font-bold leading-none tracking-wide cursor-pointer"
+        className="flex cursor-pointer items-center justify-center gap-1 text-6xl font-bold leading-none tracking-wide"
         onClick={() => setShowComposer(!showComposer)}
       >
         <span className="mt-8 block h-3 w-3 rounded-full bg-white" />
@@ -23,7 +23,10 @@ function App() {
           <VectorComposer />
         </>
       ) : (
-        <WatchMaps />
+        <>
+          <WatchMaps />
+          {/* <Demos /> */}
+        </>
       )}
     </div>
   );
