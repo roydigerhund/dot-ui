@@ -25,8 +25,8 @@ function App() {
         </>
       ) : (
         <>
-          <WatchMaps />
           <WatchWeather />
+          <WatchMaps />
         </>
       )}
     </div>
