@@ -72,23 +72,23 @@ export default function RestComposer() {
       <div className="mt-4">
         <div className="space-x-4 text-center">
           <button onClick={() => changeColumns(-1)}>-</button>
-          <span>Columns</span>
+          <span>Columns {playground.columns}</span>
           <button onClick={() => changeColumns(1)}>+</button>
         </div>
         <div className="space-x-4 text-center">
           <button onClick={() => changeRows(-1)}>-</button>
-          <span>Rows</span>
+          <span>Rows {playground.rows}</span>
           <button onClick={() => changeRows(1)}>+</button>
         </div>
       </div>
-      <div className="mt-16 grid gap-4" style={{ gridTemplateColumns: `repeat(${playground.columns}, 1fr)` }}>
+      <div className="mt-16 grid gap-2" style={{ gridTemplateColumns: `repeat(${playground.columns}, 1fr)` }}>
         {Array.from({ length: playground.columns * playground.rows }).map((_, i) => {
           const row = Math.floor(i / playground.columns);
           const column = i % playground.columns;
           return (
             <div
               key={i}
-              className={classNames('relative h-8 w-8 cursor-cell rounded-full')}
+              className={classNames('relative h-4 w-4 cursor-cell rounded-full')}
               onClick={() => toggleCell(row, column)}
             >
               {isCellActive(row, column) && <div className="absolute inset-0 z-10 rounded-full bg-white" />}

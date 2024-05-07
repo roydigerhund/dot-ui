@@ -3,6 +3,7 @@ import { useState } from 'react';
 import RestComposer from './components/RestComposer';
 import VectorComposer from './components/VectorComposer';
 import WatchMaps from './components/WatchMaps';
+import WatchWeather from './components/WatchWeather';
 
 function App() {
   const [showComposer, setShowComposer] = useState(false);
@@ -25,7 +26,7 @@ function App() {
       ) : (
         <>
           <WatchMaps />
-          {/* <Demos /> */}
+          <WatchWeather />
         </>
       )}
     </div>

@@ -52,9 +52,5 @@ const arrows = {
 export default function ArrowPlayer({ arrow }: { arrow: keyof typeof arrows }) {
   const state = arrows[arrow];
 
-  return (
-    <div className="flex justify-center gap-x-[5px]">
-      <DotPlayer state={state} />
-    </div>
-  );
+  return <DotPlayer state={state} />;
 }
