@@ -4,6 +4,7 @@ import { numPad } from '../utils/numbers';
 import ArrowPlayer from './ArrowPlayer';
 import DotPlayer from './DotPlayer';
 import TextPlayer from './TextPlayer';
+import Watch from './Watch';
 
 type Direction = [number, 'up' | 'right', 'far' | 'medium' | 'near'];
 
@@ -34,10 +35,8 @@ export default function WatchMaps() {
   }, []);
 
   return (
-    <div className="relative h-[430px] w-[352px] rounded-[3.5rem] border border-white/50">
-      <div className="absolute -right-3 top-20 h-16 w-3 rounded-r-md bg-white/50" />
-      <div className="absolute -right-1 top-56 h-24 w-1 rounded-r-sm bg-white/50" />
-      <div className="absolute inset-0 flex flex-col justify-between p-8">
+    <Watch>
+      <div className="flex grow flex-col justify-between">
         <div className="flex items-start justify-between">
           <motion.div
             animate={{ rotate: [0, 12, 36, -12, 0] }}
@@ -102,6 +101,6 @@ export default function WatchMaps() {
           />
         </div>
       </div>
-    </div>
+    </Watch>
   );
 }
