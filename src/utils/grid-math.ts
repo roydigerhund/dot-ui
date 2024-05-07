@@ -15,7 +15,7 @@ export const findFirstDot = (state: RestState) => {
 // find nearest dot in an array of arrays of number like this [[0,1,0],[0,0,0],[1,0,0]]
 // input is the array and the current position of the dot
 export const findNearestDot = (state: RestState, currentPos: [number, number]) => {
-  let nearestPos = [0, 0];
+  let nearestPos = currentPos;
   let minDistance = Infinity;
   for (let i = 0; i < state.length; i++) {
     for (let j = 0; j < state[i].length; j++) {
@@ -32,7 +32,7 @@ export const findNearestDot = (state: RestState, currentPos: [number, number]) =
 };
 
 export const findFarthestDot = (state: RestState, currentPos: [number, number]) => {
-  let farthestPos = [0, 0];
+  let farthestPos = currentPos;
   let maxDistance = 0;
   for (let i = 0; i < state.length; i++) {
     for (let j = 0; j < state[i].length; j++) {
@@ -46,6 +46,11 @@ export const findFarthestDot = (state: RestState, currentPos: [number, number]) 
     }
   }
   return farthestPos;
+};
+
+// check if a state is empty (has no 1 as value)
+export const isEmptyState = (state: RestState) => {
+  return !state.flat().includes(1);
 };
 
 // check if dot position has exists (has 1 as value) in any states

@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { isDeepEqual } from 'remeda';
 import { classNames } from '../utils/classNames';
-import { findNearestDot } from '../utils/grid-math';
+import { findNearestDot, isEmptyState } from '../utils/grid-math';
 import { RestState, RestStates } from '../utils/types';
 
 const transitionDuration = 1000;
@@ -39,6 +39,7 @@ export default function DotPlayer({ state }: { state: RestState }) {
             key={i}
             className={classNames('h-1 w-1 rounded-full bg-white')}
             animate={{
+              scale: transitionStates.map((state) => (isEmptyState(state) ? 0 : 1)),
               translateX: transitionStates.map((state) => {
                 const restingDot = findNearestDot(state, [row, column]);
                 const restingCenterXOffset = column - restingDot[1];

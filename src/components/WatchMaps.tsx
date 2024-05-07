@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { numPad } from '../utils/numbers';
 import ArrowPlayer from './ArrowPlayer';
 import DotPlayer from './DotPlayer';
-import NumbersPlayer from './NumbersPlayer';
+import TextPlayer from './TextPlayer';
 
 type Direction = [number, 'up' | 'right', 'far' | 'medium' | 'near'];
 
@@ -34,9 +34,9 @@ export default function WatchMaps() {
   }, []);
 
   return (
-    <div className="relative h-[430px] w-[352px] rounded-[3.5rem] border border-white">
-      <div className="absolute -right-3 top-20 h-16 w-3 rounded-r-md bg-white" />
-      <div className="absolute -right-1 top-56 h-24 w-1 rounded-r-sm bg-white" />
+    <div className="relative h-[430px] w-[352px] rounded-[3.5rem] border border-white/50">
+      <div className="absolute -right-3 top-20 h-16 w-3 rounded-r-md bg-white/50" />
+      <div className="absolute -right-1 top-56 h-24 w-1 rounded-r-sm bg-white/50" />
       <div className="absolute inset-0 flex flex-col justify-between p-8">
         <div className="flex items-start justify-between">
           <motion.div
@@ -62,7 +62,7 @@ export default function WatchMaps() {
             />
           </motion.div>
           <div className="flex justify-center">
-            <NumbersPlayer number={currentTime.split(':')[0]} size="medium" />
+            <TextPlayer number={currentTime.split(':')[0]} size="medium" />
             <motion.div
               animate={{ opacity: [0, 1] }}
               transition={{ duration: [0.1], repeatDelay: 0.9, ease: 'linear', repeat: Infinity, repeatType: 'mirror' }}
@@ -79,14 +79,14 @@ export default function WatchMaps() {
                 ]}
               />
             </motion.div>
-            <NumbersPlayer number={currentTime.split(':')[1]} size="medium" />
+            <TextPlayer number={currentTime.split(':')[1]} size="medium" />
           </div>
         </div>
         <div className="flex items-start justify-center">
           <ArrowPlayer arrow={direction[1]} />
         </div>
         <div className="flex justify-center">
-          <NumbersPlayer number={numPad(direction[0], 3)} size="large" />
+          <TextPlayer number={numPad(direction[0], 3)} size="large" />
           <DotPlayer
             state={[
               [0, 0, 0, 0, 0, 0, 0],
