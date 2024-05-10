@@ -38,11 +38,11 @@ export default function WatchWeather() {
         <div />
         <div className="flex flex-col items-center gap-12">
           <WeatherPlayer weather={weather[1]} />
-          <TextPlayer number={weather[0]} size="large" />
+          <TextPlayer text={weather[0]} size="large" />
         </div>
         <div className="mt-12 flex gap-8">
-          <TextPlayer number={`H:${weatherStates[unit][0][0]}`} size="small" />
-          <TextPlayer number={`L:${weatherStates[unit][2][0]}`} size="small" />
+          <TextPlayer text={`H:${weatherStates[unit][0][0]}`} size="small" />
+          <TextPlayer text={`L:${weatherStates[unit][2][0]}`} size="small" />
         </div>
       </div>
     </Watch>

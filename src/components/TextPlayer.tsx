@@ -1,6 +1,6 @@
 import DotPlayer from './DotPlayer';
 
-const smallNumbers = {
+const smallChars = {
   '0': [
     [1, 1, 1],
     [1, 0, 1],
@@ -278,7 +278,7 @@ const smallNumbers = {
   ],
 };
 
-const mediumNumbers = {
+const mediumChars = {
   '0': [
     [1, 1, 1, 1],
     [1, 0, 0, 1],
@@ -632,7 +632,7 @@ const mediumNumbers = {
   ],
 };
 
-const largeNumbers = {
+const largeChars = {
   '0': [
     [1, 1, 1, 1, 1],
     [1, 0, 0, 0, 1],
@@ -1064,16 +1064,16 @@ const largeNumbers = {
   ],
 };
 
-export default function TextPlayer({ number, size }: { number: number | string; size?: 'small' | 'medium' | 'large' }) {
-  const numbers = size === 'small' ? smallNumbers : size === 'medium' ? mediumNumbers : largeNumbers;
+export default function TextPlayer({ text, size }: { text: number | string; size?: 'small' | 'medium' | 'large' }) {
+  const characters = size === 'small' ? smallChars : size === 'medium' ? mediumChars : largeChars;
 
   return (
     <div className="flex justify-center gap-x-[5px]">
-      {number
+      {text
         .toString()
         .split('')
         .map((n, i) => {
-          const state = n in numbers ? numbers[n as keyof typeof numbers] : null;
+          const state = n in characters ? characters[n as keyof typeof characters] : null;
           if (!state) return null;
           return <DotPlayer key={i} state={state} />;
         })}

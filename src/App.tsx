@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import RestComposer from './components/RestComposer';
 import VectorComposer from './components/VectorComposer';
+import Watch3dPlayer from './components/Watch3dPlayer';
 import WatchMaps from './components/WatchMaps';
 import WatchWeather from './components/WatchWeather';
 
@@ -25,6 +26,7 @@ function App() {
         </>
       ) : (
         <>
+          <Watch3dPlayer />
           <WatchWeather />
           <WatchMaps />
         </>

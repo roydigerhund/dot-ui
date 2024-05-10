@@ -61,7 +61,7 @@ export default function WatchMaps() {
             />
           </motion.div>
           <div className="flex justify-center">
-            <TextPlayer number={currentTime.split(':')[0]} size="medium" />
+            <TextPlayer text={currentTime.split(':')[0]} size="medium" />
             <motion.div
               animate={{ opacity: [0, 1] }}
               transition={{ duration: [0.1], repeatDelay: 0.9, ease: 'linear', repeat: Infinity, repeatType: 'mirror' }}
@@ -78,14 +78,14 @@ export default function WatchMaps() {
                 ]}
               />
             </motion.div>
-            <TextPlayer number={currentTime.split(':')[1]} size="medium" />
+            <TextPlayer text={currentTime.split(':')[1]} size="medium" />
           </div>
         </div>
         <div className="flex items-start justify-center">
           <ArrowPlayer arrow={direction[1]} />
         </div>
         <div className="flex justify-center">
-          <TextPlayer number={numPad(direction[0], 3)} size="large" />
+          <TextPlayer text={numPad(direction[0], 3)} size="large" />
           <DotPlayer
             state={[
               [0, 0, 0, 0, 0, 0, 0],
